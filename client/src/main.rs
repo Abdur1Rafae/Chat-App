@@ -1,8 +1,37 @@
 use std::io::{Read, Write};
 use std::net::{TcpStream};
 use std::thread;
-
+use std::io;
+mod login;
+mod signup;
+mod mongoconn;
 fn main() {
+    //let mut mongoconn = mongoconn::connection();
+    let mut input = String::new();
+
+    println!("Do you want to login or signup? (l/s): ");
+
+    match io::stdin().read_line(&mut input) {
+        Ok(_) => {
+            if input.trim() == "l" {
+                let is_logged_in = login::login();
+
+                if is_logged_in {
+                    println!("Logged in successfully.");
+                    } else {
+                    println!("Login failed.");
+                    // Handle login failure
+    }
+            } else if input.trim() == "s" {
+                let signed_up = signup::signup();
+
+            } else {
+                println!("Invalid input.");
+            }
+        }
+        Err(e) => println!("Error: {}", e),
+    }
+    
     let ip = "127.0.0.1";
     let port = 5566;
 
