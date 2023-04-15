@@ -6,7 +6,7 @@ fn main() {
     let ip = "127.0.0.1";
     let port = 5566;
 
-    let mut stream = TcpStream::connect((ip, port)).unwrap();
+    let stream = TcpStream::connect((ip, port)).unwrap();
 
     println!("[+] Connected to the server.\n");
 
@@ -15,7 +15,7 @@ fn main() {
     let mut arr: [u8; 2] = [0; 2];
 
     let mut stream_clone = stream.try_clone().unwrap();
-    // thread for sending messages
+
     let send_thread = thread::spawn(move || {
         loop {
             print!("You: ");
@@ -36,10 +36,10 @@ fn main() {
     });
 
     let mut stream_clone2 = stream.try_clone().unwrap();
-    // thread for receiving messages
+
     let recv_thread = thread::spawn(move || {
         loop {
-            let mut recv_len: usize = 0;
+            let recv_len: usize ;
             let mut recv_arr: [u8; 2] = [0; 2];
             stream_clone2.read_exact(&mut recv_arr).unwrap();
             recv_len = recv_arr[0] as usize;
@@ -62,7 +62,6 @@ fn main() {
         }
     });
 
-    // wait for both threads to finish before exiting the program
     send_thread.join().unwrap();
     recv_thread.join().unwrap();
 
